@@ -11,7 +11,7 @@ driver.get("https://codolio.com/leaderboard")
 
 wait = WebDriverWait(driver, 10)
 
-time.sleep(30)  # wait for JS to load
+time.sleep(20)  # wait for JS to load
 
 # section = wait.until(
 #     EC.presence_of_element_located((
@@ -41,12 +41,12 @@ time.sleep(30)  # wait for JS to load
 # print(unique_profiles)
 
 
-count1 = 0
-count2 = 0
-count3 = 0
+extraData = []
 bigList = []
 for i in range(131):
-    listOfData  = []
+    listOfNames  = []
+    listOfScores  = []
+    listOfIDs  = []
     
 
     elements = driver.find_elements(
@@ -55,8 +55,8 @@ for i in range(131):
     )
     
     for e in elements:
-        listOfData.append([e.text])
-        count1 += 1
+        listOfNames.append(e.text)
+       
         print(e.text)
 
     time.sleep(10) 
@@ -67,8 +67,8 @@ for i in range(131):
     )
     
     for e in elements:
-        listOfData[count2].append(e.text)
-        count2 += 1
+        listOfScores.append(e.text)
+        
         print(e.text)
     
 
@@ -90,7 +90,21 @@ for i in range(131):
     texts = [div.text.strip() for div in divs if div.text.strip()]
     print(texts)
 
-    listOfData.append(texts)
+    listOfIDs.append(texts)
+
+
+    divs = wait.until(
+    EC.presence_of_all_elements_located((
+        By.CSS_SELECTOR,
+        "div.col-span-4.text-sm.text-center.text-gray-700"
+        ))
+    )
+
+    # Extract the text
+    texts = [div.text.strip() for div in divs if div.text.strip()]
+    print(texts)
+
+    listOfColleges = texts
 
 
     buttons = wait.until(
@@ -108,6 +122,11 @@ for i in range(131):
     )
 
     driver.execute_script("arguments[0].click();", second_button)
+
+
+    listOfData = list(zip(listOfNames, listOfScores))
+    extraData.append(listOfIDs)
+    extraData.append(listOfColleges)
     bigList.append(listOfData)
     try:
         File = open("data.txt", "a")
@@ -120,18 +139,6 @@ for i in range(131):
 
 time.sleep(20)
 
-print("Final Data:")
-for data in bigList:
-    print(data)
-
-
-try:
-    File = open("BigData.txt", "a")
-    for data in bigList:
-        File.write(str(data) + "\n")
-        File.close()
-except Exception as e:
-    print("Error writing to file:", e)
 
 # for i in range(3):
 #     elements = driver.find_elements(
