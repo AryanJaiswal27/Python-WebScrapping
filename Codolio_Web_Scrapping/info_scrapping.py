@@ -44,35 +44,34 @@ time.sleep(20)  # wait for JS to load
 extraData = []
 bigList = []
 for i in range(131):
-    listOfNames  = []
-    listOfScores  = []
-    listOfIDs  = []
+    # listOfNames  = []
+    # listOfScores  = []
+    # listOfIDs  = set()
     
 
-    elements = driver.find_elements(
-        By.CSS_SELECTOR,
-        "div.font-medium.text-gray-900.dark\\:text-darkText-300"
-    )
+    # elements = driver.find_elements(
+    #     By.CSS_SELECTOR,
+    #     "div.font-medium.text-gray-900.dark\\:text-darkText-300"
+    # )
     
-    for e in elements:
-        listOfNames.append(e.text)
+    # for e in elements:
+    #     listOfNames.append(e.text)
        
-        print(e.text)
+    #     print(e.text)
 
-    time.sleep(10) 
 
-    elements = driver.find_elements(
-        By.CSS_SELECTOR,
-        "div.col-span-2.py-3.px-4.text-center.font-medium"
-    )
+
+    # elements = driver.find_elements(
+    #     By.CSS_SELECTOR,
+    #     "div.col-span-2.py-3.px-4.text-center.font-medium"
+    # )
     
-    for e in elements:
-        listOfScores.append(e.text)
+    # for e in elements:
+    #     listOfScores.append(e.text)
         
-        print(e.text)
+    #     print(e.text)
     
 
-    time.sleep(10) 
     
     section = wait.until(
     EC.presence_of_element_located((
@@ -90,21 +89,7 @@ for i in range(131):
     texts = [div.text.strip() for div in divs if div.text.strip()]
     print(texts)
 
-    listOfIDs.append(texts)
-
-
-    divs = wait.until(
-    EC.presence_of_all_elements_located((
-        By.CSS_SELECTOR,
-        "div.col-span-4.text-sm.text-center.text-gray-700"
-        ))
-    )
-
-    # Extract the text
-    texts = [div.text.strip() for div in divs if div.text.strip()]
-    print(texts)
-
-    listOfColleges = texts
+    listOfIDs = set(texts)
 
 
     buttons = wait.until(
@@ -124,18 +109,27 @@ for i in range(131):
     driver.execute_script("arguments[0].click();", second_button)
 
 
-    listOfData = list(zip(listOfNames, listOfScores))
-    extraData.append(listOfIDs)
-    extraData.append(listOfColleges)
-    bigList.append(listOfData)
+    # listOfData = list(zip(listOfNames, listOfScores))
+    # extraData.append(listOfIDs)
+    # extraData.append(listOfColleges)
+    # bigList.append(listOfData)
+    # try:
+    #     File = open("name_score.txt", "a")
+    #     for data in listOfData:
+    #         File.write(str(data) + "\n")
+    #     File.close()
+    # except Exception as e:
+    #     print("Error writing to file:", e)
+
     try:
-        File = open("data.txt", "a")
-        for data in listOfData:
-            File.write(str(data) + "\n")
-        File.close()
+        with open("ids.txt", "a", encoding="utf-8") as f:
+            for id in listOfIDs:
+                f.write(id + "\n")
+            
     except Exception as e:
         print("Error writing to file:", e)
-    time.sleep(15)
+
+    time.sleep(10)
 
 time.sleep(20)
 
@@ -177,3 +171,14 @@ time.sleep(20)
 
 
 driver.quit()
+
+
+# unique_lines = set()
+
+# with open("ids.txt", "r", encoding="utf-8") as f, \
+#      open("final_ids.txt", "w", encoding="utf-8") as out:
+    
+#     for line in f:
+#         if line not in unique_lines:
+#             unique_lines.add(line)
+#             out.write(line)
